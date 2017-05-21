@@ -6,6 +6,30 @@ use WPSimpleCache\TransientCache;
 
 class TransientCacheTest extends SimpleCacheTestCase
 {
+    public function setUp()
+    {
+        parent::setUp();
+
+        $backend = getenv('SC_BACKEND') ?: 'none';
+
+        if ('redis' === $backend) {
+            $this->skippedTests = [
+                'testClearWithPrefix' => 'It is not possible to clear prefixed transients from an external object cache',
+                'testClearAlsoClearsTimeoutEntries' => 'Transients don\'t have timeout entries with an external object cache',
+                'testClearWithPrefixAlsoClearsTimeoutEntries' => 'Transients don\'t have timeout entries with an external object cache',
+            ];
+        } elseif ('memcached' === $backend) {
+
+        }
+    }
+
+    public function tearDown()
+    {
+        parent::tearDown();
+
+        $this->skippedTests = [];
+    }
+
     public function createSimpleCache($prefix = '', $defaultTtl = 0)
     {
         return new TransientCache($GLOBALS['wpdb'], $prefix, $defaultTtl);
