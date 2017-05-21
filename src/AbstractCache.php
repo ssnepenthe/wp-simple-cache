@@ -6,13 +6,28 @@ use Psr\SimpleCache\CacheInterface;
 
 abstract class AbstractCache implements CacheInterface
 {
+    abstract public function clear();
+    abstract public function delete($key);
     abstract public function get($key, $default = null);
-
     abstract public function set($key, $value, $ttl = null);
 
-    abstract public function delete($key);
+    public function deleteMultiple($keys)
+    {
+        if (! is_array($keys) && ! $keys instanceof \Traversable) {
+            throw new InvalidArgumentException(sprintf(
+                'Cache keys must be array or traversable, %s given',
+                gettype($keys)
+            ));
+        }
 
-    abstract public function clear();
+        $success = true;
+
+        foreach ($keys as $key) {
+            $success = $success && $this->delete($key);
+        }
+
+        return $success;
+    }
 
     public function getMultiple($keys, $default = null)
     {
@@ -23,13 +38,18 @@ abstract class AbstractCache implements CacheInterface
             ));
         }
 
-        $results = [];
+        $results = array();
 
         foreach ($keys as $key) {
             $results[$key] = $this->get($key, $default);
         }
 
         return $results;
+    }
+
+    public function has($key)
+    {
+        return ! is_null($this->get($key));
     }
 
     public function setMultiple($values, $ttl = null)
@@ -52,29 +72,6 @@ abstract class AbstractCache implements CacheInterface
         }
 
         return $success;
-    }
-
-    public function deleteMultiple($keys)
-    {
-        if (! is_array($keys) && ! $keys instanceof \Traversable) {
-            throw new InvalidArgumentException(sprintf(
-                'Cache keys must be array or traversable, %s given',
-                gettype($keys)
-            ));
-        }
-
-        $success = true;
-
-        foreach ($keys as $key) {
-            $success = $success && $this->delete($key);
-        }
-
-        return $success;
-    }
-
-    public function has($key)
-    {
-        return ! is_null($this->get($key));
     }
 
     protected function itemTtl($ttl)

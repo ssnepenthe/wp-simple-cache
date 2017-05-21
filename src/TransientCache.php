@@ -33,40 +33,6 @@ class TransientCache extends AbstractCache
         $this->defaultTtl = max(0, intval($defaultTtl));
     }
 
-    public function get($key, $default = null)
-    {
-        $value = get_transient($this->itemKey($key));
-
-        // Non-existent or expired transient returns false.
-        if (false === $value) {
-            return $default;
-        }
-
-        // WordPress already unserializes where necessary, but we are storing double
-        // serialized values in order to make sure type in === type out.
-        return maybe_unserialize($value);
-    }
-
-    public function set($key, $value, $ttl = null)
-    {
-        if (is_null($value) || 0 === $ttl || 0 > $ttl = $this->itemTtl($ttl)) {
-            return $this->delete($key);
-        }
-
-        // Maybe a little weird... WordPress won't return the correct data type, so
-        // we end up double serializing everything in order to correct this behavior.
-        return set_transient($this->itemKey($key), serialize($value), $ttl);
-    }
-
-    public function delete($key)
-    {
-        if (! $this->has($key)) {
-            return true;
-        }
-
-        return delete_transient($this->itemKey($key));
-    }
-
     public function clear()
     {
         if (wp_using_ext_object_cache()) {
@@ -88,6 +54,55 @@ class TransientCache extends AbstractCache
         wp_cache_flush();
 
         return false === $count ? false : true;
+    }
+
+    public function delete($key)
+    {
+        if (! $this->has($key)) {
+            return true;
+        }
+
+        return delete_transient($this->itemKey($key));
+    }
+
+    public function get($key, $default = null)
+    {
+        $value = get_transient($this->itemKey($key));
+
+        // Non-existent or expired transient returns false.
+        if (false === $value) {
+            return $default;
+        }
+
+        // WordPress already unserializes where necessary, but we are storing double
+        // serialized values in order to make sure type in === type out.
+        return maybe_unserialize($value);
+    }
+
+    public function getDb()
+    {
+        return $this->db;
+    }
+
+    public function getPrefix()
+    {
+        return $this->prefix;
+    }
+
+    public function getDefaultTtl()
+    {
+        return $this->defaultTtl;
+    }
+
+    public function set($key, $value, $ttl = null)
+    {
+        if (is_null($value) || 0 === $ttl || 0 > $ttl = $this->itemTtl($ttl)) {
+            return $this->delete($key);
+        }
+
+        // Maybe a little weird... WordPress won't return the correct data type, so
+        // we end up double serializing everything in order to correct this behavior.
+        return set_transient($this->itemKey($key), serialize($value), $ttl);
     }
 
     protected function itemKey($key)
