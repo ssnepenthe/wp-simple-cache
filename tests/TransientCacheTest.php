@@ -14,9 +14,13 @@ class TransientCacheTest extends SimpleCacheTestCase
 
         if ('redis' === $backend) {
             $this->skippedTests = [
+                'testClear' => 'The transient clear operation is very limited with an external object cache',
                 'testClearWithPrefix' => 'It is not possible to clear prefixed transients from an external object cache',
                 'testClearAlsoClearsTimeoutEntries' => 'Transients don\'t have timeout entries with an external object cache',
                 'testClearWithPrefixAlsoClearsTimeoutEntries' => 'Transients don\'t have timeout entries with an external object cache',
+                'testSetTtl' => 'It is impossible to test transient TTL in a single request without integrating more directly with the external object cache',
+                'testSetWithDefaultTtl' => 'It is impossible to test transient TTL in a single request without integrating more directly with the external object cache',
+                'testSetMultipleTtl' => 'It is impossible to test transient TTL in a single request without integrating more directly with the external object cache',
             ];
         } elseif ('memcached' === $backend) {
 
