@@ -36,7 +36,7 @@ class TransientCache extends AbstractCache
     public function clear()
     {
         if (wp_using_ext_object_cache()) {
-            return false;
+            return $this->clearTransientsFromObjectCache();
         }
 
         $prefix = $this->prefix ? "{$this->prefix}:" : '';
@@ -103,6 +103,21 @@ class TransientCache extends AbstractCache
         // Maybe a little weird... WordPress won't return the correct data type, so
         // we end up double serializing everything in order to correct this behavior.
         return set_transient($this->itemKey($key), serialize($value), $ttl);
+    }
+
+    protected function clearTransientsFromObjectCache()
+    {
+        // No way to do a pattern-match clear.
+        if ($this->prefix) {
+            return false;
+        }
+
+        // WP-Redis by Pantheon implements this.
+        if (function_exists('wp_cache_delete_group')) {
+            return wp_cache_delete_group('transient');
+        }
+
+        return false;
     }
 
     protected function itemKey($key)
