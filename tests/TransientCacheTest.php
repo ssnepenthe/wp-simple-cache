@@ -37,6 +37,10 @@ class TransientCacheTest extends SimpleCacheTestCase
 
     public function testDeleteWithPrefix()
     {
+        if (isset($this->skippedTests[__FUNCTION__])) {
+            $this->markTestSkipped($this->skippedTests[__FUNCTION__]);
+        }
+
         $cache = $this->createSimpleCache('pfx');
 
         set_transient('pfx:key1', 'value');
@@ -48,6 +52,10 @@ class TransientCacheTest extends SimpleCacheTestCase
 
     public function testGetWithPrefix()
     {
+        if (isset($this->skippedTests[__FUNCTION__])) {
+            $this->markTestSkipped($this->skippedTests[__FUNCTION__]);
+        }
+
         $cache = $this->createSimpleCache('pfx');
 
         set_transient('pfx:key1', 'value');
@@ -57,6 +65,10 @@ class TransientCacheTest extends SimpleCacheTestCase
 
     public function testSetWithPrefix()
     {
+        if (isset($this->skippedTests[__FUNCTION__])) {
+            $this->markTestSkipped($this->skippedTests[__FUNCTION__]);
+        }
+
         $cache = $this->createSimpleCache('pfx');
 
         $cache->set('key1', 'value');
@@ -66,6 +78,10 @@ class TransientCacheTest extends SimpleCacheTestCase
 
     public function testHasWithPrefix()
     {
+        if (isset($this->skippedTests[__FUNCTION__])) {
+            $this->markTestSkipped($this->skippedTests[__FUNCTION__]);
+        }
+
         $cache = $this->createSimpleCache('pfx');
 
         set_transient('pfx:key1', 'value');
@@ -75,6 +91,10 @@ class TransientCacheTest extends SimpleCacheTestCase
 
     public function testClearWithPrefix()
     {
+        if (isset($this->skippedTests[__FUNCTION__])) {
+            $this->markTestSkipped($this->skippedTests[__FUNCTION__]);
+        }
+
         $cache = $this->createSimpleCache('pfx');
 
         set_transient('pfx:key1', 'value');
@@ -95,6 +115,10 @@ class TransientCacheTest extends SimpleCacheTestCase
 
     public function testClearAlsoClearsTimeoutEntries()
     {
+        if (isset($this->skippedTests[__FUNCTION__])) {
+            $this->markTestSkipped($this->skippedTests[__FUNCTION__]);
+        }
+
         $this->cache->set('key1', 'value', 360);
 
         // Sanity.
@@ -109,6 +133,10 @@ class TransientCacheTest extends SimpleCacheTestCase
 
     public function testClearWithPrefixAlsoClearsTimeoutEntries()
     {
+        if (isset($this->skippedTests[__FUNCTION__])) {
+            $this->markTestSkipped($this->skippedTests[__FUNCTION__]);
+        }
+
         $cache = $this->createSimpleCache('pfx');
 
         $cache->set('key1', 'value', 360);
