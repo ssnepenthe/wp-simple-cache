@@ -52,7 +52,8 @@ class ObjectCache extends AbstractCache
 
         $value = $this->cache->get($key, $this->prefix, $this->aggressive, $found);
 
-        return false === $found ? $default : $value;
+        // Maybe unserialize because we end up double serializing integers.
+        return false === $found ? $default : maybe_unserialize($value);
     }
 
     public function getAggressive()
@@ -82,6 +83,12 @@ class ObjectCache extends AbstractCache
         }
 
         $this->validateItemKey($key);
+
+        // Yikes... I don't feel good about this and it definitely needs testing.
+        // WP-Redis serializes everything except integers need some love too.
+        if (is_int($value)) {
+            $value = serialize($value);
+        }
 
         return $this->cache->set($key, $value, $this->prefix, $ttl);
     }
