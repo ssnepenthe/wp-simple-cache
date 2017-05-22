@@ -83,6 +83,6 @@ class ObjectCache extends AbstractCache
 
         $this->validateItemKey($key);
 
-        return $this->cache->set($key, $value, $this->prefix, $this->itemTtl($ttl));
+        return $this->cache->set($key, $value, $this->prefix, $ttl);
     }
 }
