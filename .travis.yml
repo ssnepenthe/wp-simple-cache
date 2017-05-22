@@ -27,8 +27,6 @@ matrix:
     - php: 5.6
       env: WP_VERSION=latest SC_BACKEND=redis
     - php: 5.6
-      env: WP_VERSION=latest SC_BACKEND=memcached
-    - php: 5.6
       env: WP_VERSION=trunk SC_BACKEND=none
     - php: 5.6
       env: WP_TRAVISCI=phpcs
