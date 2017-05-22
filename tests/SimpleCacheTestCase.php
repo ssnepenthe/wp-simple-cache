@@ -20,6 +20,8 @@ abstract class SimpleCacheTestCase extends WP_UnitTestCase
      */
     protected $cache;
 
+    protected $backend;
+
     /**
      * @return CacheInterface that is used in the tests
      */
@@ -29,12 +31,15 @@ abstract class SimpleCacheTestCase extends WP_UnitTestCase
     {
         parent::setUp();
 
+        $this->backend = getenv('SC_BACKEND') ?: 'none';
         $this->cache = $this->createSimpleCache();
     }
 
     public function tearDown()
     {
         parent::tearDown();
+
+        $this->backend = null;
 
         if ($this->cache !== null) {
             $this->cache->clear();

@@ -10,9 +10,7 @@ class TransientCacheTest extends SimpleCacheTestCase
     {
         parent::setUp();
 
-        $backend = getenv('SC_BACKEND') ?: 'none';
-
-        if ('redis' === $backend) {
+        if ('none' !== $this->backend) {
             $this->skippedTests = [
                 'testClear' => 'The transient clear operation is very limited with an external object cache',
                 'testClearWithPrefix' => 'It is not possible to clear prefixed transients from an external object cache',
@@ -22,8 +20,6 @@ class TransientCacheTest extends SimpleCacheTestCase
                 'testSetWithDefaultTtl' => 'It is impossible to test transient TTL in a single request without integrating more directly with the external object cache',
                 'testSetMultipleTtl' => 'It is impossible to test transient TTL in a single request without integrating more directly with the external object cache',
             ];
-        } elseif ('memcached' === $backend) {
-
         }
     }
 
