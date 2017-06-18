@@ -58,7 +58,7 @@ class ObjectCache extends AbstractCache
 
     public function getAggressive()
     {
-        return $this->aggresive;
+        return $this->aggressive;
     }
 
     public function getCache()
