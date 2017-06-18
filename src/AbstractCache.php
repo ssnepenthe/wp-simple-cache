@@ -106,7 +106,7 @@ abstract class AbstractCache implements CacheInterface
             ));
         }
 
-        if ('' === $key) {
+        if (! isset($key[0])) {
             throw new InvalidArgumentException(
                 'Cache key length must be greater than zero'
             );
